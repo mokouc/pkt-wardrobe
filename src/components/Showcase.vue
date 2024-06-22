@@ -38,11 +38,7 @@ const toggleGender = () => {
     return gender.value
 }
 
-defineExpose({ setGlas, setHair, setCset})
-
-onMounted(() => {
-    // getAssetImg('base', 'base.png')
-})
+defineExpose({ setGlas, setHair, setCset, setGlasImg, setHairImg, setCsetImg})
 
 </script>
 
