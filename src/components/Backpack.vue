@@ -21,7 +21,7 @@ const PAGE_SIZE: number = 12
 const type = ref(props.type)
 const gender = ref(props.gender)
 
-const face = ref(FACE_IMG)
+const base = ref(FACE_IMG)
 const items = ref<any[]>([])
 
 const infos = ref<any>({
@@ -99,9 +99,9 @@ defineExpose({ setGender })
         <div class="items">
             <div class="item" v-for="i in PAGE_SIZE" :class="{'hide': items[i - 1] == undefined}">  
                 <div class="canva">
-                    <img class="itemImg back" alt="" :src="items[i - 1]?.img" :class="type" />
-                    <img class="baseImg" alt="" :src="items[i - 1] == undefined ? '' : face" :class="type" />
-                    <img class="itemImg front" alt="" 
+                    <img alt="" class="itemImg back" :class="type" :src="items[i - 1]?.img" />
+                    <img alt="" class="baseImg" :class="type" :src="base" />
+                    <img alt="" class="itemImg front" 
                         :class="type" 
                         :src="items[i - 1]?.img" 
                         :title="items[i - 1]?.title" 
