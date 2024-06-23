@@ -142,7 +142,7 @@ onMounted(() => {
         width: 100%; height: 50px;
 
         font-size: 20px;
-        color: rgb(178, 178, 178);
+        color: rgb(100, 100, 100);
 
         display: flex;
         justify-content: center;
