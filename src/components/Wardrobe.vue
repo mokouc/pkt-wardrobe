@@ -11,13 +11,13 @@ const handleToggleGender = (gender: string) => {
 }
 
 const handleClickItem = (value: any) => {
-    console.log(value.img)
+    console.log(value)
     switch (value.type) {
         case 'cset': showcase.value.setCsetImg(value.img) 
             break;
-        case 'glas': showcase.value.setGlasImg(value.img)
-            break;
         case 'hair': showcase.value.setHairImg(value.img)
+            break;
+        case 'glas': showcase.value.setGlas(value.name)
             break;
     }
 }

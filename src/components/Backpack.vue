@@ -15,13 +15,14 @@ const props = withDefaults(defineProps<{
     gender: 'girl'
 })
 
+const FACE_IMG: string = new URL(`../assets/img/base/face.png`, import.meta.url).href
 const PAGE_SIZE: number = 12
 
 const type = ref(props.type)
 const gender = ref(props.gender)
 
-const face = ref(new URL(`../assets/img/base/face.png`, import.meta.url).href)
-const itemImgs = ref<any[]>([])
+const face = ref(FACE_IMG)
+const items = ref<any[]>([])
 
 const infos = ref<any>({
     cset: {
@@ -45,7 +46,8 @@ const buildList = () => {
             for (var name in elem.json)
                 elem.list.push({
                     img: new URL(`../assets/img/${type}/${gender}/${name}`, import.meta.url).href, 
-                    name: elem.json[name] == '' ? name : elem.json[name]
+                    title: elem.json[name] == '' ? name : elem.json[name],
+                    name: name,
                 })
             elem.total = Math.floor(elem.list.length / PAGE_SIZE) + 1
         }
@@ -69,19 +71,19 @@ const setPage = (type: string, gender: string, page: number) => {
     const list = infos.value[type][gender].list
 
     for (var i = 0; i < PAGE_SIZE; i++)
-        itemImgs.value[i] = list[i + offset]
+        items.value[i] = list[i + offset]
 }
 
 const clickItem = (event: any) => { 
-    return {type: type.value, img: event.target.src, name: event.target.title}
+    return {type: type.value, img: event.target.src, title: event.target.title, name: event.target.getAttribute('name')}
 }
-
-defineExpose({ setGender })
 
 onMounted(() => {
     buildList()
     setPage(type.value, gender.value, 1)
 })
+
+defineExpose({ setGender })
 
 </script>
 
@@ -95,9 +97,15 @@ onMounted(() => {
         <div class="items">
             <div class="item" v-for="i in 12">  
                 <div class="canva">
-                    <img class="itemImg back" :src="itemImgs[i - 1]?.img" :class="type" alt="" />
-                    <img class="baseImg" :src="itemImgs[i - 1] == undefined ? '' : face" :class="type" alt="" />
-                    <img class="itemImg front" :src="itemImgs[i - 1]?.img" :title="itemImgs[i - 1]?.name" :class="type" @click="$emit('click-item', clickItem($event))" alt="" />
+                    <img class="itemImg back" :src="items[i - 1]?.img" :class="type" alt="" />
+                    <img class="baseImg" :src="items[i - 1] == undefined ? '' : face" :class="type" alt="" />
+                    <img class="itemImg front" alt="" 
+                        :src="items[i - 1]?.img" 
+                        :title="items[i - 1]?.title" 
+                        :class="type" 
+                        :name="items[i - 1]?.name"
+                        @click="$emit('click-item', clickItem($event))"
+                    />
                 </div>
             </div>
         </div>

@@ -2,14 +2,15 @@
 import { ref, defineExpose, onMounted } from 'vue'
 
 const props = withDefaults(defineProps<{
-    genderNumber: number
+    genderNum: number
 }>(), {
-    genderNumber: 0
+    genderNum: 0
 })
 
-const genderDefine = ['girl', 'boy']
-const genderNumber = ref(props.genderNumber)
-const gender = ref(genderDefine[genderNumber.value])
+const GENDER_DEFINE = ['girl', 'boy']
+var genderNum = props.genderNum
+
+const gender = ref(GENDER_DEFINE[genderNum])
 
 const base = ref(new URL(`../assets/img/base/${gender.value}.png`, import.meta.url).href)
 
@@ -22,20 +23,18 @@ const setGlas = (name: string) => setGlasImg(getGlasImg(name))
 const setHair = (name: string) => setHairImg(getHairImg(name))
 const setCset = (name: string) => setCsetImg(getCsetImg(name))
 
-// const setGlasImg = (img: {glas: string, mini: string}) => {glas.value = img.glas; mini.value = img.mini}
-const setGlasImg = (img: string) => {glas.value = img; mini.value = img.replace('/1', '/2').replace('_Animate', '')}
+const setGlasImg = (img: {glas: string, mini: string}) => {glas.value = img.glas; mini.value = img.mini}
 const setHairImg = (img: string) => hair.value = img
 const setCsetImg = (img: string) => cset.value = img
 
-// const getGlasImg = (name: string) => { return {glas: getAssetImg('glas', name), mini: getAssetImg('glas', name.replace('1', '2').replace('_Animate', ''))}}
-const getGlasImg = (name: string) => getAssetImg('glas', name)
+const getGlasImg = (name: string) => { return {glas: getAssetImg('glas', name), mini: getAssetImg('glas', name.replace('1', '2').replace('_Animate', ''))}}
 const getHairImg = (name: string) => getAssetImg('hair', name)
 const getCsetImg = (name: string) => getAssetImg('cset', name)
 const getAssetImg = (type: string, name: string) => new URL(`../assets/img/${type}/${gender.value}/${name}`, import.meta.url).href
 
 const toggleGender = () => {
-    genderNumber.value   = (genderNumber.value + 1) % 2
-    gender.value = genderDefine[genderNumber.value]
+    genderNum = (genderNum + 1) % 2
+    gender.value = GENDER_DEFINE[genderNum]
     base.value = new URL(`../assets/img/base/${gender.value}.png`, import.meta.url).href
     return gender.value
 }
