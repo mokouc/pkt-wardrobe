@@ -11,7 +11,6 @@ const handleToggleGender = (gender: string) => {
 }
 
 const handleClickItem = (value: any) => {
-    console.log(value)
     switch (value.type) {
         case 'cset': showcase.value.setCsetImg(value.img) 
             break;

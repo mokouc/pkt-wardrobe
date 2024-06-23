@@ -70,6 +70,7 @@ const setPage = (type: string, gender: string, page: number) => {
     const offset = (infos.value[type][gender].page - 1) * PAGE_SIZE
     const list = infos.value[type][gender].list
 
+    items.value = []
     for (var i = 0; i < PAGE_SIZE; i++)
         items.value[i] = list[i + offset]
 }
