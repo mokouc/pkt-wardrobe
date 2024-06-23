@@ -54,7 +54,7 @@ const buildList = () => {
     }
 }
 
-const clickTab = (typeTo: any) => {
+const setType = (typeTo: any) => {
     type.value = typeTo
     setPage(type.value, gender.value, infos.value[type.value][gender.value].page)
 }
@@ -70,7 +70,8 @@ const setPage = async (type: string, gender: string, page: number) => {
     const offset = (infos.value[type][gender].page - 1) * PAGE_SIZE
     const list = infos.value[type][gender].list
 
-    items.value = []
+    items.value.length = 0;
+
     for (var i = 0; i < PAGE_SIZE; i++)
         items.value[i] = list[i + offset]
 }
@@ -91,19 +92,19 @@ defineExpose({ setGender })
 <template>
     <div class="backpack-container">
         <div class="tabs top">
-            <div class="tab" :class="{'selected': type == 'cset'}" @click="clickTab('cset')" >套装</div>
-            <div class="tab" :class="{'selected': type == 'hair'}" @click="clickTab('hair')" >头发</div>
-            <div class="tab" :class="{'selected': type == 'glas'}" @click="clickTab('glas')" >眼瞳</div>
+            <div class="tab" :class="{'selected': type == 'cset'}" @click="setType('cset')" >套装</div>
+            <div class="tab" :class="{'selected': type == 'hair'}" @click="setType('hair')" >头发</div>
+            <div class="tab" :class="{'selected': type == 'glas'}" @click="setType('glas')" >眼瞳</div>
         </div>
         <div class="items">
-            <div class="item" v-for="i in 12">  
+            <div class="item" v-for="i in PAGE_SIZE" :class="{'hide': items[i - 1] == undefined}">  
                 <div class="canva">
-                    <img class="itemImg back" :src="items[i - 1]?.img" :class="type" alt="" />
-                    <img class="baseImg" :src="items[i - 1] == undefined ? '' : face" :class="type" alt="" />
+                    <img class="itemImg back" alt="" :src="items[i - 1]?.img" :class="type" />
+                    <img class="baseImg" alt="" :src="items[i - 1] == undefined ? '' : face" :class="type" />
                     <img class="itemImg front" alt="" 
+                        :class="type" 
                         :src="items[i - 1]?.img" 
                         :title="items[i - 1]?.title" 
-                        :class="type" 
                         :name="items[i - 1]?.name"
                         @click="$emit('click-item', clickItem($event))"
                     />
@@ -192,6 +193,10 @@ defineExpose({ setGender })
         background-color: rgb(250, 250, 250);
     }
 
+    .item.hide {
+        visibility: hidden;
+    }
+
     .canva {
         /* scale: 2; */
         -webkit-transform: scale(2); /* Safari and Chrome */
@@ -219,7 +224,7 @@ defineExpose({ setGender })
         top: -355px; left: -615px;
     }
 
-    .baseImg.cset, .baseImg.hide {
+    .baseImg.cset {
         visibility: hidden;
     }
 
