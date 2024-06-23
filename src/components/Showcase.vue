@@ -51,25 +51,25 @@ defineExpose({ setGlas, setHair, setCset, setGlasImg, setHairImg, setCsetImg})
             </div>
 
             <div class="full">
-                <img :src="hair" class="hair back" style="top: -150px; left: -600px;" alt="">
-                <img :src="glas" class="glas" alt="">
-                <img :src="cset" class="cset" style="top: -300px; left: -600px;" alt="">
-                <img :src="hair" class="hair front" style="top: 0px; left: -600px;" alt="">
+                <img :src="hair" alt="" class="hair back" style="top: -150px; left: -600px;" >
+                <img :src="glas" alt="" class="glas" >
+                <img :src="cset" alt="" class="cset" style="top: -300px; left: -600px;" >
+                <img :src="hair" alt="" class="hair front" style="top: 0px; left: -600px;" >
             </div>
 
             <div class="mini front">
-                <img :src="mini" class="glas" style="top: 0px;" alt="">
-                <img :src="cset" class="cset" style="top: -60px;" alt="">
-                <img :src="cset" class="cset" style="top: -300px;" alt="">
-                <img :src="cset" class="cset" style="top: -120px;" alt="">
-                <img :src="hair" class="hair" style="top: 0px;" alt="">
+                <img :src="mini" alt="" class="glas" style="top: 0px;" >
+                <img :src="hair" alt="" class="hair" style="top: 0px;" >
+                <img :src="cset" alt="" class="cset" style="top: -60px;" >
+                <img :src="cset" alt="" class="cset" style="top: -300px;" >
+                <img :src="cset" alt="" class="cset" style="top: -120px;" >
             </div>
 
             <div class="mini back">
-                <img :src="cset" class="cset" style="top: -480px;" alt="">
-                <img :src="cset" class="cset" style="top: -720px;" alt="">
-                <img :src="cset" class="cset" style="top: -120px;" alt="">
-                <img :src="hair" class="hair" style="top: -420px;" alt="">
+                <img :src="cset" alt="" class="cset" style="top: -600px;" >
+                <img :src="cset" alt="" class="cset" style="top: -720px;" >
+                <img :src="cset" alt="" class="cset" style="top: -480px;" >
+                <img :src="hair" alt="" class="hair" style="top: -420px;" >
             </div>
 
             <div class="toggle" @click="$emit('toggle-gender', toggleGender())"></div>
