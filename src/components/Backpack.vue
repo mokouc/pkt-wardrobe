@@ -142,7 +142,6 @@ onMounted(() => {
         width: 100%; height: 50px;
 
         font-size: 20px;
-        font-family: '丁卯点阵体', sans-serif;
         color: rgb(178, 178, 178);
 
         display: flex;
