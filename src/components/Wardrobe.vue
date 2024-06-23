@@ -38,13 +38,18 @@ onMounted(() => {
 
 <style scoped>
     .wardrobe-container {
-        position: relative;
-
         position: absolute;
-        top: 50%; left: 50%;
-        transform: translate(-50%, -50%);
+        top: 0%; left: 0%;
+        min-width: 100%; min-height: 100%;
+
+        justify-content: center;
+        align-items: center;
 
         display: flex;
         gap: 20px;
+    }
+
+    .debug {
+        background-color: rgba(255, 0, 0, 0.2);
     }
 </style>

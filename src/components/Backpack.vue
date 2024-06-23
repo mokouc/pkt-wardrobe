@@ -64,7 +64,7 @@ const setGender = (genderTo: string) => {
     setPage(type.value, gender.value, infos.value[type.value][gender.value].page)
 }
 
-const setPage = (type: string, gender: string, page: number) => {
+const setPage = async (type: string, gender: string, page: number) => {
     infos.value[type][gender].page = page;
 
     const offset = (infos.value[type][gender].page - 1) * PAGE_SIZE
@@ -193,7 +193,13 @@ defineExpose({ setGender })
     }
 
     .canva {
-        scale: 2;
+        /* scale: 2; */
+        -webkit-transform: scale(2); /* Safari and Chrome */
+        -moz-transform: scale(2);    /* Firefox */
+        -ms-transform: scale(2);     /* Internet Explorer */
+        -o-transform: scale(2);      /* Opera */
+        transform: scale(2);         /* Standard */
+
         transform-origin: top left;
     }
 

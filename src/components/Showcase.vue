@@ -85,8 +85,12 @@ defineExpose({ setGlas, setHair, setCset, setGlasImg, setHairImg, setCsetImg})
     }
 
     .canva {
-        scale: 4;
-        /* transform-origin: top left; */
+        /* scale: 4; */
+        -webkit-transform: scale(4); /* Safari and Chrome */
+        -moz-transform: scale(4);    /* Firefox */
+        -ms-transform: scale(4);     /* Internet Explorer */
+        -o-transform: scale(4);      /* Opera */
+        transform: scale(4);         /* Standard */
     }
 
     .canva > div {
@@ -117,7 +121,6 @@ defineExpose({ setGlas, setHair, setCset, setGlasImg, setHairImg, setCsetImg})
         position: absolute;
         top: 1px; left: 102px;
         width: 40px; height: 28px;
-        /* background-color: rgba(255, 0, 0, 0.2); */
     }
 
     img{
