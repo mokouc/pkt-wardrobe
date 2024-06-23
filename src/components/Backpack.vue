@@ -20,7 +20,7 @@ const PAGE_SIZE: number = 12
 const type = ref(props.type)
 const gender = ref(props.gender)
 
-const face = ref(new URL(`../assets/img/wardrobe/base/face.png`, import.meta.url).href)
+const face = ref(new URL(`../assets/img/base/face.png`, import.meta.url).href)
 const itemImgs = ref<any[]>([])
 
 const infos = ref<any>({
@@ -44,7 +44,7 @@ const buildList = () => {
             const elem = infos.value[type][gender]
             for (var name in elem.json)
                 elem.list.push({
-                    img: new URL(`../assets/img/wardrobe/${type}/${gender}/${name}`, import.meta.url).href, 
+                    img: new URL(`../assets/img/${type}/${gender}/${name}`, import.meta.url).href, 
                     name: elem.json[name] == '' ? name : elem.json[name]
                 })
             elem.total = Math.floor(elem.list.length / PAGE_SIZE) + 1
@@ -73,7 +73,7 @@ const setPage = (type: string, gender: string, page: number) => {
 }
 
 const clickItem = (event: any) => { 
-    return {type: type.value, res: event.target.src, name: event.target.title}
+    return {type: type.value, img: event.target.src, name: event.target.title}
 }
 
 defineExpose({ setGender })
@@ -142,6 +142,8 @@ onMounted(() => {
         width: 100%; height: 50px;
 
         font-size: 20px;
+        font-family: '丁卯点阵体', sans-serif;
+        color: rgb(178, 178, 178);
 
         display: flex;
         justify-content: center;
@@ -178,7 +180,8 @@ onMounted(() => {
         position: relative;
         width: 140px; height: 140px;
         overflow: hidden;
-        /* background-color: rgba(255, 0, 0, 0.2); */
+        border: solid 3px rgb(245, 245, 245);
+        background-color: rgb(250, 250, 250);
     }
 
     .canva {

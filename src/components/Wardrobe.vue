@@ -11,20 +11,21 @@ const handleToggleGender = (gender: string) => {
 }
 
 const handleClickItem = (value: any) => {
+    console.log(value.img)
     switch (value.type) {
-        case 'cset': showcase.value.setCsetImg(value.res) 
+        case 'cset': showcase.value.setCsetImg(value.img) 
             break;
-        case 'glas': showcase.value.setGlasImg(value.res)
+        case 'glas': showcase.value.setGlasImg(value.img)
             break;
-        case 'hair': showcase.value.setHairImg(value.res)
+        case 'hair': showcase.value.setHairImg(value.img)
             break;
     }
 }
 
 onMounted(() => {
-    showcase.value.setGlas('1_f_glas131_Animate.png')
+    showcase.value.setGlas('1_f_glas103_Animate[星途女瞳].png')
     showcase.value.setHair('1_f_hair754[天使街女发].png')
-    showcase.value.setCset('1_u_cset2254.png')
+    showcase.value.setCset('1_u_cset1462[白猫女装].png')
 })
 
 </script>

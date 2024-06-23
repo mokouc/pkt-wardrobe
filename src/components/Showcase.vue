@@ -11,7 +11,7 @@ const genderDefine = ['girl', 'boy']
 const genderNumber = ref(props.genderNumber)
 const gender = ref(genderDefine[genderNumber.value])
 
-const base = ref(new URL(`../assets/img/wardrobe/base/${gender.value}.png`, import.meta.url).href)
+const base = ref(new URL(`../assets/img/base/${gender.value}.png`, import.meta.url).href)
 
 const glas = ref()
 const mini = ref()
@@ -22,19 +22,21 @@ const setGlas = (name: string) => setGlasImg(getGlasImg(name))
 const setHair = (name: string) => setHairImg(getHairImg(name))
 const setCset = (name: string) => setCsetImg(getCsetImg(name))
 
-const setGlasImg = (img: {glas: string, mini: string}) => {glas.value = img.glas; mini.value = img.mini}
+// const setGlasImg = (img: {glas: string, mini: string}) => {glas.value = img.glas; mini.value = img.mini}
+const setGlasImg = (img: string) => {glas.value = img; mini.value = img.replace('/1', '/2').replace('_Animate', '')}
 const setHairImg = (img: string) => hair.value = img
 const setCsetImg = (img: string) => cset.value = img
 
-const getGlasImg = (name: string) => { return {glas: getAssetImg('glas', name), mini: getAssetImg('glas', name.replace('1', '2').replace('_Animate', ''))}}
+// const getGlasImg = (name: string) => { return {glas: getAssetImg('glas', name), mini: getAssetImg('glas', name.replace('1', '2').replace('_Animate', ''))}}
+const getGlasImg = (name: string) => getAssetImg('glas', name)
 const getHairImg = (name: string) => getAssetImg('hair', name)
 const getCsetImg = (name: string) => getAssetImg('cset', name)
-const getAssetImg = (type: string, name: string) => new URL(`../assets/img/wardrobe/${type}/${gender.value}/${name}`, import.meta.url).href
+const getAssetImg = (type: string, name: string) => new URL(`../assets/img/${type}/${gender.value}/${name}`, import.meta.url).href
 
 const toggleGender = () => {
     genderNumber.value   = (genderNumber.value + 1) % 2
     gender.value = genderDefine[genderNumber.value]
-    base.value = new URL(`../assets/img/wardrobe/base/${gender.value}.png`, import.meta.url).href
+    base.value = new URL(`../assets/img/base/${gender.value}.png`, import.meta.url).href
     return gender.value
 }
 
