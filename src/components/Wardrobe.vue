@@ -2,6 +2,7 @@
 import { onMounted, ref } from 'vue'
 import Showcase from './Showcase.vue';
 import Backpack from './Backpack.vue';
+import SHowcaseTest from './ShowcaseTest.vue';
 
 const showcase = ref()
 const backpack = ref()
@@ -31,6 +32,7 @@ onMounted(() => {
 
 <template>
     <div class="wardrobe-container">
+        <!-- <SHowcaseTest ref="showcase" class="showcase"  @toggle-gender="handleToggleGender" :genderNumber="0"/> -->
         <Showcase ref="showcase" class="showcase" @toggle-gender="handleToggleGender" :genderNumber="0"/>
         <Backpack ref="backpack" class="backpack" @click-item="handleClickItem" :type="'cset'" gender="girl"/>
     </div>
@@ -50,6 +52,7 @@ onMounted(() => {
     }
 
     .debug {
+        display: none;
         background-color: rgba(255, 0, 0, 0.2);
     }
 </style>
