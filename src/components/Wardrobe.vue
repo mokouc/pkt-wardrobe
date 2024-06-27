@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import Showcase from './Showcase.vue';
+// import Showcase from './Showcase.vue';
 import Backpack from './Backpack.vue';
 import SHowcaseTest from './ShowcaseTest.vue';
 
@@ -11,29 +11,21 @@ const handleToggleGender = (gender: string) => {
     backpack.value.setGender(gender)
 }
 
-const handleClickItem = (value: any) => {
-    switch (value.type) {
-        case 'cset': showcase.value.setCsetImg(value.img) 
-            break;
-        case 'hair': showcase.value.setHairImg(value.img)
-            break;
-        case 'glas': showcase.value.setGlas(value.name)
-            break;
-    }
-}
+const handleClickItem = (value: any) => showcase.value.setImg(value.type, value.img)
 
 onMounted(() => {
-    showcase.value.setGlas('1_f_glas103_Animate[星途女瞳].png')
-    showcase.value.setHair('1_f_hair754[天使街女发].png')
-    showcase.value.setCset('1_u_cset1462[白猫女装].png')
+    // showcase.value.setImg('base', new URL(`../assets/img/base/girl.png`, import.meta.url).href)
+    // showcase.value.setImg('cset', new URL(`../assets/img/cset/girl/1_u_cset1462.png`, import.meta.url).href)
+    // showcase.value.setImg('hair', new URL(`../assets/img/hair/girl/1_f_hair754.png`, import.meta.url).href)
+    // showcase.value.setImg('glas', new URL(`../assets/img/glas/girl/1_f_glas103_Animate.png`, import.meta.url).href)
 })
 
 </script>
 
 <template>
     <div class="wardrobe-container">
-        <!-- <SHowcaseTest ref="showcase" class="showcase"  @toggle-gender="handleToggleGender" :genderNumber="0"/> -->
-        <Showcase ref="showcase" class="showcase" @toggle-gender="handleToggleGender" :genderNumber="0"/>
+        <SHowcaseTest ref="showcase" class="showcase" />
+        <!-- <Showcase ref="showcase" class="showcase" @toggle-gender="handleToggleGender" :genderNum="0"/> -->
         <Backpack ref="backpack" class="backpack" @click-item="handleClickItem" :type="'cset'" gender="girl"/>
     </div>
 </template>
@@ -49,6 +41,15 @@ onMounted(() => {
 
         display: flex;
         gap: 20px;
+    }
+
+    .showcase {
+        /* scale: 4; */
+        /* -webkit-transform: scale(4); 
+        -moz-transform: scale(4);    
+        -ms-transform: scale(4);     
+        -o-transform: scale(4);      
+        transform: scale(4);          */
     }
 
     .debug {
