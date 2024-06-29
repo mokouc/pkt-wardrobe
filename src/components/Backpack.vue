@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref, defineExpose } from 'vue'
+import { useWardrobeStore } from '@/stores/wardrobe'
+import { useImageStore } from '@/stores/image'
 import girlGlasList from '@/assets/list/girl/glasList.json'
 import girlHairList from '@/assets/list/girl/hairList.json'
 import girlCsetList from '@/assets/list/girl/csetList.json'
@@ -7,19 +9,13 @@ import boyGlasList from '@/assets/list/boy/glasList.json'
 import boyHairList from '@/assets/list/boy/hairList.json'
 import boyCsetList from '@/assets/list/boy/csetList.json'
 
-const props = withDefaults(defineProps<{
-    type: string
-    gender: string
-}>(), {
-    type: 'cset',
-    gender: 'girl'
-})
-
 const FACE_IMG: string = new URL(`../assets/img/base/face.png`, import.meta.url).href
 const PAGE_SIZE: number = 12
 
-const type = ref(props.type)
-const gender = ref(props.gender)
+const type = ref('cset')
+
+const imgs = useImageStore()
+const gender = useWardrobeStore().getGender
 
 const base = ref(FACE_IMG)
 const items = ref<any[]>([])
@@ -56,33 +52,27 @@ const buildList = () => {
 
 const setType = (typeTo: any) => {
     type.value = typeTo
-    setPage(type.value, gender.value, infos.value[type.value][gender.value].page)
+    setPage(type.value, gender, infos.value[type.value][gender].page)
 }
 
-const setGender = (genderTo: string) => {
-    gender.value = genderTo
-    setPage(type.value, gender.value, infos.value[type.value][gender.value].page)
-}
+const setGender = () => setPage(
+    type.value, gender, infos.value[type.value][gender].page
+)
 
 const setPage = async (type: string, gender: string, page: number) => {
     infos.value[type][gender].page = page;
-
     const offset = (infos.value[type][gender].page - 1) * PAGE_SIZE
     const list = infos.value[type][gender].list
-
     items.value.length = 0;
-
     for (var i = 0; i < PAGE_SIZE; i++)
         items.value[i] = list[i + offset]
 }
 
-const clickItem = (event: any) => { 
-    return {type: type.value, img: event.target.src, title: event.target.title, name: event.target.getAttribute('name')}
-}
+const clickItem = (event: any) => imgs.setImage(type.value, event.target.src)
 
 onMounted(() => {
     buildList()
-    setPage(type.value, gender.value, 1)
+    setPage(type.value, gender, 1)
 })
 
 defineExpose({ setGender })
@@ -97,15 +87,15 @@ defineExpose({ setGender })
             <div class="tab" :class="{'selected': type == 'glas'}" @click="setType('glas')" >眼瞳</div>
         </div>
         <div class="items">
-            <div class="item" v-for="i in PAGE_SIZE" :class="{'hide': items[i - 1] == undefined}">  
+            <div class="item" v-for="(i, index) in PAGE_SIZE" :class="{'hide': items[i - 1] == undefined}">  
                 <div class="canva">
                     <img alt="" class="itemImg back" :class="type" :src="items[i - 1]?.img" />
                     <img alt="" class="baseImg" :class="type" :src="base" />
                     <img alt="" class="itemImg front" 
                         :class="type" 
-                        :src="items[i - 1]?.img" 
-                        :title="items[i - 1]?.title" 
-                        :name="items[i - 1]?.name"
+                        :src="items[index]?.img" 
+                        :title="items[index]?.title" 
+                        :name="items[index]?.name"
                         @click="$emit('click-item', clickItem($event))"
                     />
                 </div>

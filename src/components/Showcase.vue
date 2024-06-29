@@ -1,79 +1,40 @@
 <script setup lang="ts">
-import { ref, defineExpose, onMounted } from 'vue'
+import { ref, defineExpose, watch } from 'vue'
+import { useWardrobeStore } from '@/stores/wardrobe'
+import { useImageStore } from '@/stores/image'
+import { usePositionStore } from '@/stores/position'
 
-const props = withDefaults(defineProps<{
-    genderNum: number
-}>(), {
-    genderNum: 0
-})
+const CANVAS_WIDTH = 143 
+const CANVAS_HEIGHT = 152
 
-const GENDER_DEFINE = ['girl', 'boy']
-var genderNum = props.genderNum
+const canvas = ref<HTMLCanvasElement>()
 
-const gender = ref(GENDER_DEFINE[genderNum])
+const gender = useWardrobeStore().getGender
+const pos = usePositionStore().pos
+const imgs = useImageStore().imgs
 
-const base = ref(new URL(`../assets/img/base/${gender.value}.png`, import.meta.url).href)
-
-const glas = ref()
-const mini = ref()
-const hair = ref()
-const cset = ref()
-
-const setGlas = (name: string) => setGlasImg(getGlasImg(name))
-const setHair = (name: string) => setHairImg(getHairImg(name))
-const setCset = (name: string) => setCsetImg(getCsetImg(name))
-
-const setGlasImg = (img: {glas: string, mini: string}) => {glas.value = img.glas; mini.value = img.mini}
-const setHairImg = (img: string) => hair.value = img
-const setCsetImg = (img: string) => cset.value = img
-
-const getGlasImg = (name: string) => { return {glas: getAssetImg('glas', name), mini: getAssetImg('glas', name.replace('1', '2').replace('_Animate', ''))}}
-const getHairImg = (name: string) => getAssetImg('hair', name)
-const getCsetImg = (name: string) => getAssetImg('cset', name)
-const getAssetImg = (type: string, name: string) => new URL(`../assets/img/${type}/${gender.value}/${name}`, import.meta.url).href
-
-const toggleGender = () => {
-    genderNum = (genderNum + 1) % 2
-    gender.value = GENDER_DEFINE[genderNum]
-    base.value = new URL(`../assets/img/base/${gender.value}.png`, import.meta.url).href
-    return gender.value
+const setImg = (items: any) => items.forEach((item: any) => imgs.get(item.type).src = item.img)
+const drawImgs = () => {
+    const ctx = canvas.value?.getContext('2d')
+    ctx?.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
+    pos.forEach((p: any) => ctx?.drawImage(imgs.get(p.type), p.sx, p.sy, p.sw, p.sh, p.x, p.y, p.w, p.h))
 }
 
-defineExpose({ setGlas, setHair, setCset, setGlasImg, setHairImg, setCsetImg})
+watch(() => gender, () => {
+    alert(gender)
+})
 
+useImageStore().setOnload(drawImgs)
+
+defineExpose({ setImg })
 </script>
 
 <template>
     <div class="showcase-container">
-        <div class="canva">
-            <div class="base">
-                <img :src="base"class="img base" alt="">
-            </div>
-
-            <div class="full">
-                <img :src="hair" alt="" class="hair back" style="top: -150px; left: -600px;" >
-                <img :src="glas" alt="" class="glas" >
-                <img :src="cset" alt="" class="cset" style="top: -300px; left: -600px;" >
-                <img :src="hair" alt="" class="hair front" style="top: 0px; left: -600px;" >
-            </div>
-
-            <div class="mini front">
-                <img :src="mini" alt="" class="glas" style="top: 0px;" >
-                <img :src="hair" alt="" class="hair" style="top: 0px;" >
-                <img :src="cset" alt="" class="cset" style="top: -60px;" >
-                <img :src="cset" alt="" class="cset" style="top: -300px;" >
-                <img :src="cset" alt="" class="cset" style="top: -120px;" >
-            </div>
-
-            <div class="mini back">
-                <img :src="cset" alt="" class="cset" style="top: -600px;" >
-                <img :src="cset" alt="" class="cset" style="top: -720px;" >
-                <img :src="cset" alt="" class="cset" style="top: -480px;" >
-                <img :src="hair" alt="" class="hair" style="top: -420px;" >
-            </div>
-
-            <div class="toggle" @click="$emit('toggle-gender', toggleGender())"></div>
-        </div>
+        <canvas ref="canvas" class="canvas" style="image-rendering: pixelated;"
+            :width="CANVAS_WIDTH" :height="CANVAS_HEIGHT"
+        ></canvas>
+        <div class="toggle" @click="useWardrobeStore().toggleGender"></div>
     </div>
 </template>
 
@@ -84,47 +45,14 @@ defineExpose({ setGlas, setHair, setCset, setGlasImg, setHairImg, setCsetImg})
         overflow: hidden;
     }
 
-    .canva {
-        /* scale: 4; */
-        -webkit-transform: scale(4); /* Safari and Chrome */
-        -moz-transform: scale(4);    /* Firefox */
-        -ms-transform: scale(4);     /* Internet Explorer */
-        -o-transform: scale(4);      /* Opera */
-        transform: scale(4);         /* Standard */
-    }
-
-    .canva > div {
-        position: absolute;
-        overflow: hidden;
-    }
-
-    .base {
-        width: 143px; height: 152px;
-    }
-
-    .full {
-        top: 1px; left: 1px;
-        width: 100px; height: 150px;
-    }
-
-    .mini.front {
-        top: 30px; left: 102px;
-        width: 40px; height: 60px;
-    }
-
-    .mini.back {
-        top: 91px; left: 102px;
-        width: 40px; height: 60px;
+    .canvas {
+        position: relative;
+        width: 572px; height: 608px;
     }
 
     .toggle {
         position: absolute;
-        top: 1px; left: 102px;
-        width: 40px; height: 28px;
-    }
-
-    img{
-        position: absolute;
-        image-rendering: pixelated;
+        top: 4px; left: 408px;
+        width: 160px; height: 112px;
     }
 </style>
