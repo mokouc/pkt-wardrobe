@@ -1,110 +1,46 @@
 <script setup lang="ts">
-import { onMounted, ref, defineExpose } from 'vue'
-import { useWardrobeStore } from '@/stores/wardrobe'
 import { useImageStore } from '@/stores/image'
-import girlGlasList from '@/assets/list/girl/glasList.json'
-import girlHairList from '@/assets/list/girl/hairList.json'
-import girlCsetList from '@/assets/list/girl/csetList.json'
-import boyGlasList from '@/assets/list/boy/glasList.json'
-import boyHairList from '@/assets/list/boy/hairList.json'
-import boyCsetList from '@/assets/list/boy/csetList.json'
+import { storeToRefs } from 'pinia'
+import { useItemStore } from '@/stores/collection'
+import { useConst } from '@/hooks/useConst'
 
-const FACE_IMG: string = new URL(`../assets/img/base/face.png`, import.meta.url).href
-const PAGE_SIZE: number = 12
+const { PAGE_SIZE } = useConst()
 
-const type = ref('cset')
+const pageStore = useItemStore()
 
-const imgs = useImageStore()
-const gender = useWardrobeStore().getGender
+const type = storeToRefs(pageStore).getType
+const collection = storeToRefs(pageStore).getCollection
+const items = storeToRefs(pageStore).getItems
 
-const base = ref(FACE_IMG)
-const items = ref<any[]>([])
-
-const infos = ref<any>({
-    cset: {
-        boy: {json: boyCsetList, list: [], page: 1, total: 1 },
-        girl: {json: girlCsetList, list: [], page: 1, total: 1 },
-    },
-    hair: {
-        boy: {json: boyHairList, list: [], page: 1, total: 1 },
-        girl: {json: girlHairList, list: [], page: 1, total: 1 },
-    },
-    glas: {
-        boy: {json: boyGlasList, list: [], page: 1, total: 1 },
-        girl: {json: girlGlasList, list: [], page: 1, total: 1 },
-    },
-})
-
-const buildList = () => {
-    for (var type in infos.value) {
-        for (var gender in infos.value[type]) {
-            const elem = infos.value[type][gender]
-            for (var name in elem.json)
-                elem.list.push({
-                    img: new URL(`../assets/img/${type}/${gender}/${name}`, import.meta.url).href, 
-                    title: elem.json[name] == '' ? name : elem.json[name],
-                    name: name,
-                })
-            elem.total = Math.floor(elem.list.length / PAGE_SIZE) + 1
-        }
-    }
-}
-
-const setType = (typeTo: any) => {
-    type.value = typeTo
-    setPage(type.value, gender, infos.value[type.value][gender].page)
-}
-
-const setGender = () => setPage(
-    type.value, gender, infos.value[type.value][gender].page
-)
-
-const setPage = async (type: string, gender: string, page: number) => {
-    infos.value[type][gender].page = page;
-    const offset = (infos.value[type][gender].page - 1) * PAGE_SIZE
-    const list = infos.value[type][gender].list
-    items.value.length = 0;
-    for (var i = 0; i < PAGE_SIZE; i++)
-        items.value[i] = list[i + offset]
-}
-
-const clickItem = (event: any) => imgs.setImage(type.value, event.target.src)
-
-onMounted(() => {
-    buildList()
-    setPage(type.value, gender, 1)
-})
-
-defineExpose({ setGender })
-
+const clickItem = (event: any) => useImageStore().setImage(type.value, event.target.src)
 </script>
 
 <template>
     <div class="backpack-container">
         <div class="tabs top">
-            <div class="tab" :class="{'selected': type == 'cset'}" @click="setType('cset')" >套装</div>
-            <div class="tab" :class="{'selected': type == 'hair'}" @click="setType('hair')" >头发</div>
-            <div class="tab" :class="{'selected': type == 'glas'}" @click="setType('glas')" >眼瞳</div>
+            <div class="tab" :class="{'selected': type == 'cset'}" @click="pageStore.setType('cset')" >套装</div>
+            <div class="tab" :class="{'selected': type == 'hair'}" @click="pageStore.setType('hair')" >头发</div>
+            <div class="tab" :class="{'selected': type == 'glas'}" @click="pageStore.setType('glas')" >眼瞳</div>
         </div>
         <div class="items">
             <div class="item" v-for="(i, index) in PAGE_SIZE" :class="{'hide': items[i - 1] == undefined}">  
                 <div class="canva">
                     <img alt="" class="itemImg back" :class="type" :src="items[i - 1]?.img" />
-                    <img alt="" class="baseImg" :class="type" :src="base" />
+                    <img alt="" class="baseImg" :class="type" :src="useConst().FACE_BASE_IMG" />
                     <img alt="" class="itemImg front" 
                         :class="type" 
                         :src="items[index]?.img" 
                         :title="items[index]?.title" 
                         :name="items[index]?.name"
-                        @click="$emit('click-item', clickItem($event))"
+                        @click="clickItem($event)"
                     />
                 </div>
             </div>
         </div>
         <div class="tabs bottom">
-            <div class="tab" @click="setPage(type, gender, Math.max(infos[type][gender].page - 1, 1))"><</div>
-            <div class="tab">{{ infos[type][gender].page }} / {{ infos[type][gender].total }}</div>
-            <div class="tab" @click="setPage(type, gender, Math.min(infos[type][gender].page + 1, infos[type][gender].total))">></div>
+            <div class="tab" @click="pageStore.prePage"><</div>
+            <div class="tab">{{ collection.page }} / {{ collection.total }}</div>
+            <div class="tab" @click="pageStore.nextPage">></div>
         </div>
     </div>
 </template>

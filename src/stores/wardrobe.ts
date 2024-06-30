@@ -2,6 +2,7 @@ import { defineStore } from "pinia"
 import { computed, ref } from "vue"
 
 export const useWardrobeStore = defineStore('wardrobe', () => {
+
     const gender = ref('girl')
 
     const getGender = computed(() => gender.value)

@@ -1,32 +1,31 @@
 <script setup lang="ts">
-import { ref, defineExpose, watch } from 'vue'
+import { ref } from 'vue'
+import { useConst } from "@/hooks/useConst"
+import { usePosition } from '@/hooks/usePosition'
 import { useWardrobeStore } from '@/stores/wardrobe'
 import { useImageStore } from '@/stores/image'
-import { usePositionStore } from '@/stores/position'
 
-const CANVAS_WIDTH = 143 
-const CANVAS_HEIGHT = 152
+const { CANVAS_WIDTH, CANVAS_HEIGHT } = useConst()
+const position = usePosition()
+
+const imageStore = useImageStore()
+const { toggleGender } = useWardrobeStore()
 
 const canvas = ref<HTMLCanvasElement>()
 
-const gender = useWardrobeStore().getGender
-const pos = usePositionStore().pos
-const imgs = useImageStore().imgs
-
-const setImg = (items: any) => items.forEach((item: any) => imgs.get(item.type).src = item.img)
-const drawImgs = () => {
+const drawImages = () => {
     const ctx = canvas.value?.getContext('2d')
     ctx?.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
-    pos.forEach((p: any) => ctx?.drawImage(imgs.get(p.type), p.sx, p.sy, p.sw, p.sh, p.x, p.y, p.w, p.h))
+    position.forEach((pos: any) => {
+        const image = imageStore.getImage(pos.type)
+        try {
+            ctx?.drawImage(image, pos.sx, pos.sy, pos.sw, pos.sh, pos.x, pos.y, pos.w, pos.h)
+        } catch (e) {
+            console.info('not found img: ' + image.src)
+        }
+    })
 }
-
-watch(() => gender, () => {
-    alert(gender)
-})
-
-useImageStore().setOnload(drawImgs)
-
-defineExpose({ setImg })
+useImageStore().setOnload(drawImages)
 </script>
 
 <template>
@@ -34,7 +33,7 @@ defineExpose({ setImg })
         <canvas ref="canvas" class="canvas" style="image-rendering: pixelated;"
             :width="CANVAS_WIDTH" :height="CANVAS_HEIGHT"
         ></canvas>
-        <div class="toggle" @click="useWardrobeStore().toggleGender"></div>
+        <div class="toggle" @click="toggleGender"></div>
     </div>
 </template>
 
