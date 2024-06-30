@@ -53,7 +53,7 @@ onMounted(() => ctx.value = canvas.value.getContext('2d'))
 </script>
 <template>
     <div class="cell-container">
-        <canvas ref="canvas" class="canvas" :width="ITEM_CELL_WIDTH" :height="ITEM_CELL_HEIGHT"></canvas>
+        <canvas ref="canvas" class="canvas" :width="ITEM_CELL_WIDTH" :height="ITEM_CELL_HEIGHT" :title="item.title"></canvas>
     </div>
 </template>
 

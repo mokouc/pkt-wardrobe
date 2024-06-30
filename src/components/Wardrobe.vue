@@ -14,7 +14,7 @@ const backpack = ref()
 
 onMounted(() => {
     imageStore.setImage('base', useConst().GIRL_BASE_IMG)
-    imageStore.setImage('cset', new URL('../assets/img/cset/girl/1_u_cset1462.png', import.meta.url).href)
+    imageStore.setImage('cset', new URL('../assets/img/cset/girl/1_f_cset853.png', import.meta.url).href)
     imageStore.setImage('hair', new URL('../assets/img/hair/girl/1_f_hair754.png', import.meta.url).href)
     imageStore.setImage('glas', new URL('../assets/img/glas/girl/1_f_glas103_Animate.png', import.meta.url).href)
     imageStore.setImage('glam', new URL('../assets/img/glas/girl/2_f_glas103.png', import.meta.url).href)

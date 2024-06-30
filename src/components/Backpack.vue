@@ -33,7 +33,7 @@ const clickItem = (item: any) => {
             <div class="tab" :class="{'selected': type == 'glas'}" @click="collectionStore.setType('glas')" >眼瞳</div>
         </div>
         <div class="items">
-            <ItemCell v-for="(i, index) in PAGE_SIZE" 
+            <ItemCell v-for="(i, index) in PAGE_SIZE"
                 :class="{'hide': items[i - 1] == undefined}"
                 :item="items[index]"
                 @click="clickItem(items[index])" />
