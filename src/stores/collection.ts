@@ -9,7 +9,7 @@ import { computed, ref } from "vue"
 import { useConst } from '@/hooks/useConst'
 import { useWardrobeStore } from '@/stores/wardrobe'
 
-export const useItemStore = defineStore('collection', () => {
+export const useCollectionStore = defineStore('collection', () => {
 
     const { PAGE_SIZE } = useConst()
 
@@ -17,9 +17,11 @@ export const useItemStore = defineStore('collection', () => {
         const list = []
         for (var name in json)
             list.push({ 
+                type: type,
+                gender: gender,
+                name: name,
                 img: new URL(`../assets/img/${type}/${gender}/${name}`, import.meta.url).href, 
-                title: json[name] == '' ? name : json[name], 
-                name: name 
+                title: json[name] == '' ? name : json[name]
             })
         return { type: type, gender: gender, list: list, page: 1, total: Math.floor(list.length / PAGE_SIZE) + 1}
     }

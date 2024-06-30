@@ -5,7 +5,7 @@ import { useConst } from "@/hooks/useConst"
 
 export const useImageStore = defineStore('image', () => {
     
-    const { GIRL_BASE_IMG, BOY_BASE_IMG } = useConst()
+    const { BOY_BASE_IMG, GIRL_BASE_IMG } = useConst()
 
     const gender = storeToRefs(useWardrobeStore()).getGender
 

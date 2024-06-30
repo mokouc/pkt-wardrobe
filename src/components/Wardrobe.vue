@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { useImageStore } from '@/stores/image'
-import { useItemStore } from '@/stores/collection';
+import { useCollectionStore } from '@/stores/collection';
 import { useConst } from '@/hooks/useConst';
 import Showcase from './Showcase.vue';
 import Backpack from './Backpack.vue';
 
 const imageStore = useImageStore()
-const pageStore = useItemStore()
+const pageStore = useCollectionStore()
 
 const showcase = ref()
 const backpack = ref()
@@ -17,8 +17,8 @@ onMounted(() => {
     imageStore.setImage('cset', new URL('../assets/img/cset/girl/1_u_cset1462.png', import.meta.url).href)
     imageStore.setImage('hair', new URL('../assets/img/hair/girl/1_f_hair754.png', import.meta.url).href)
     imageStore.setImage('glas', new URL('../assets/img/glas/girl/1_f_glas103_Animate.png', import.meta.url).href)
-
-    pageStore.setType('cset')   
+    imageStore.setImage('glam', new URL('../assets/img/glas/girl/2_f_glas103.png', import.meta.url).href)
+    pageStore.setType('cset')
 })
 </script>
 

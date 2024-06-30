@@ -5,9 +5,9 @@ import { usePosition } from '@/hooks/usePosition'
 import { useWardrobeStore } from '@/stores/wardrobe'
 import { useImageStore } from '@/stores/image'
 
-const { CANVAS_WIDTH, CANVAS_HEIGHT } = useConst()
-const position = usePosition()
+const { SHOWCASE_WIDTH, SHOWCASE_HEIGHT } = useConst()
 
+const position = usePosition().position
 const imageStore = useImageStore()
 const { toggleGender } = useWardrobeStore()
 
@@ -15,7 +15,7 @@ const canvas = ref<HTMLCanvasElement>()
 
 const drawImages = () => {
     const ctx = canvas.value?.getContext('2d')
-    ctx?.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
+    ctx?.clearRect(0, 0, SHOWCASE_WIDTH, SHOWCASE_HEIGHT)
     position.forEach((pos: any) => {
         const image = imageStore.getImage(pos.type)
         try {
@@ -30,9 +30,7 @@ useImageStore().setOnload(drawImages)
 
 <template>
     <div class="showcase-container">
-        <canvas ref="canvas" class="canvas" style="image-rendering: pixelated;"
-            :width="CANVAS_WIDTH" :height="CANVAS_HEIGHT"
-        ></canvas>
+        <canvas ref="canvas" class="canvas" :width="SHOWCASE_WIDTH" :height="SHOWCASE_HEIGHT"></canvas>
         <div class="toggle" @click="toggleGender"></div>
     </div>
 </template>
@@ -47,6 +45,7 @@ useImageStore().setOnload(drawImages)
     .canvas {
         position: relative;
         width: 572px; height: 608px;
+        image-rendering: pixelated;
     }
 
     .toggle {
