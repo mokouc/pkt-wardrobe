@@ -1,11 +1,11 @@
 import { defineStore, storeToRefs } from "pinia"
-import girlGlasList from '@/assets/list/girl/glasList.json'
-import girlHairList from '@/assets/list/girl/hairList.json'
-import girlCsetList from '@/assets/list/girl/csetList.json'
-import boyGlasList from '@/assets/list/boy/glasList.json'
-import boyHairList from '@/assets/list/boy/hairList.json'
-import boyCsetList from '@/assets/list/boy/csetList.json'
-import { computed, ref } from "vue"
+import girlGlasList from '@/assets/json/girl/glasList.json'
+import girlHairList from '@/assets/json/girl/hairList.json'
+import girlCsetList from '@/assets/json/girl/csetList.json'
+import boyGlasList from '@/assets/json/boy/glasList.json'
+import boyHairList from '@/assets/json/boy/hairList.json'
+import boyCsetList from '@/assets/json/boy/csetList.json'
+import { computed, onMounted, ref } from "vue"
 import { useConst } from '@/hooks/useConst'
 import { useWardrobeStore } from '@/stores/wardrobe'
 
@@ -14,15 +14,19 @@ export const useCollectionStore = defineStore('collection', () => {
     const { PAGE_SIZE } = useConst()
 
     const build = (json: any, type: string, gender: string) => {
-        const list = []
-        for (var name in json)
+        let list = []
+        for (var name in json) {
+            if (type == 'glas' && !name.includes('Animate'))
+                continue
             list.push({ 
-                type: type,
-                gender: gender,
                 name: name,
+                title: json[name],
                 img: new URL(`../assets/img/${type}/${gender}/${name}`, import.meta.url).href, 
-                title: json[name] == '' ? name : json[name]
+                type: type,
+                gender: gender
             })
+        }
+        list = list.sort((a, b) => a.name.length > b.name.length || a.name > b.name ? 1 : -1)
         return { type: type, gender: gender, list: list, page: 1, total: Math.floor(list.length / PAGE_SIZE) + 1}
     }
     
@@ -40,7 +44,7 @@ export const useCollectionStore = defineStore('collection', () => {
             girl: build(girlGlasList, 'glas', 'girl'),
         }
     })
-
+    
     const getCollection = computed(() => collections.value[getType.value][gender.value])
 
     const getItems = computed(() => {
@@ -56,9 +60,8 @@ export const useCollectionStore = defineStore('collection', () => {
 
     const getType = computed(() => type.value)
     const setType = (target: string) => type.value = target;
+    
+    const setPage = (page: number) => getCollection.value.page = Math.max(Math.min(page, getCollection.value.total), 1)
 
-    const prePage = () => getCollection.value.page = Math.max(getCollection.value.page - 1, 1)
-    const nextPage = () => getCollection.value.page = Math.min(getCollection.value.page + 1, getCollection.value.total)
-
-    return { getCollection, getItems, getType, setType, prePage, nextPage }
+    return { getCollection, getItems, getType, setType, setPage }
 })

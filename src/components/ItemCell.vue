@@ -53,22 +53,46 @@ onMounted(() => ctx.value = canvas.value.getContext('2d'))
 </script>
 <template>
     <div class="cell-container">
-        <canvas ref="canvas" class="canvas" :width="ITEM_CELL_WIDTH" :height="ITEM_CELL_HEIGHT" :title="item?.title"></canvas>
+        <div class="image">
+            <canvas ref="canvas" class="canvas" :width="ITEM_CELL_WIDTH" :height="ITEM_CELL_HEIGHT" :title="item?.title"></canvas>
+        </div>
+        <div class="label">
+            <span>{{ item?.title || item?.name }}</span>
+        </div>
     </div>
 </template>
 
 <style scoped>
     .cell-container {
         position: relative;
+        width: 140px; height: 165px;
+        width: 126px; height: 140px;
+    }
+
+    .image {
+        position: relative;
         width: 140px; height: 140px;
+        width: 126px; height: 126px;
         overflow: hidden;
         border: solid 3px rgb(245, 245, 245);
+        box-sizing: border-box; 
         background-color: rgb(250, 250, 250);
     }
 
     .canvas {
         position: relative;
         width: 280px; height: 280px;
+        width: 252px; height: 252px;
         image-rendering: pixelated;
+    }
+
+    .label {
+        position: relative;
+        width: 140px;
+        height: 20px;
+        font-size: 14px;
+        display: flex;
+        justify-content: center;
+        overflow: hidden;
     }
 </style>

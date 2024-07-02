@@ -4,6 +4,7 @@ import { storeToRefs } from 'pinia'
 import { useCollectionStore } from '@/stores/collection'
 import { useConst } from '@/hooks/useConst'
 import ItemCell from './ItemCell.vue'
+import { ref } from 'vue'
 
 const { PAGE_SIZE } = useConst()
 
@@ -18,19 +19,32 @@ const collection = collectionStoreRef.getCollection
 const clickItem = (item: any) => {
     imageStore.setImage(type.value, item.img)
     if (type.value == 'glas') {
-        const img = new URL(`../assets/img/glas/${item.gender}/${item.name.replace('1', '2').replace('_Animate', '')}`, import.meta.url).href
+        const img = new URL(`../assets/img/glas/${item.gender}/${item.name.replace('_Animate', '')}`, import.meta.url).href
         console.log(img)
         imageStore.setImage('glam', img)
     }
 }
+
+const isJump = ref(false)
+const input = ref()
+
+const jump = () => {
+    collectionStore.setPage(input.value.value)
+    isJump.value = !isJump.value
+}
+
+document.addEventListener('keydown', (event: KeyboardEvent) => {
+    if (event.key === 'Escape')
+        isJump.value = !isJump.value
+});
 </script>
 
 <template>
     <div class="backpack-container">
         <div class="tabs top">
-            <div class="tab" :class="{'selected': type == 'cset'}" @click="collectionStore.setType('cset')" >套装</div>
-            <div class="tab" :class="{'selected': type == 'hair'}" @click="collectionStore.setType('hair')" >头发</div>
-            <div class="tab" :class="{'selected': type == 'glas'}" @click="collectionStore.setType('glas')" >眼瞳</div>
+            <div class="button" :class="{'selected': type == 'cset'}" @click="collectionStore.setType('cset')" >套装</div>
+            <div class="button" :class="{'selected': type == 'hair'}" @click="collectionStore.setType('hair')" >头发</div>
+            <div class="button" :class="{'selected': type == 'glas'}" @click="collectionStore.setType('glas')" >眼瞳</div>
         </div>
         <div class="items">
             <ItemCell v-for="(i, index) in PAGE_SIZE"
@@ -39,9 +53,15 @@ const clickItem = (item: any) => {
                 @click="clickItem(items[index])" />
         </div>
         <div class="tabs bottom">
-            <div class="tab" @click="collectionStore.prePage"><</div>
-            <div class="tab">{{ collection.page }} / {{ collection.total }}</div>
-            <div class="tab" @click="collectionStore.nextPage">></div>
+            <div class="button" @click="collectionStore.setPage(collection.page - 1)"><</div>
+            <div class="button page">
+                <span ref="page" :class="{'hide': isJump}" @click="isJump = !isJump">{{ collection.page }} / {{ collection.total }}</span>
+                <div class="jump" :class="{'hide': !isJump}">
+                    <input ref="input" class="input" type="number" :value="collection.page" @keypress.enter="jump" />
+                    <span class="go" @click="jump">Go</span>
+                </div>
+            </div>
+            <div class="button" @click="collectionStore.setPage(collection.page + 1)">></div>
         </div>
     </div>
 </template>
@@ -52,7 +72,7 @@ const clickItem = (item: any) => {
         width: max-content; height: 608px;
         
         border: solid 4px rgb(178, 178, 178);
-        box-sizing: border-box;
+        box-sizing: border-box; 
 
         transform-origin: top left;
         overflow: hidden;
@@ -74,7 +94,7 @@ const clickItem = (item: any) => {
         background-color: rgb(231, 231, 231);
     }
 
-    .tab {
+    .button {
         width: 100%; height: 50px;
 
         font-size: 20px;
@@ -86,14 +106,20 @@ const clickItem = (item: any) => {
         
         background-color: rgb(231, 231, 231);
         cursor: pointer;
+
+        user-select: none;
     }
 
-    .tabs.bottom > .tab {
+    .tabs.bottom > .button {
         width: 100px; height: 50px;
     }
 
-    .tab.selected {
+    .button.selected {
         background-color: white;
+    }
+
+    .button.page > * {
+        position: absolute;
     }
 
     .items {
@@ -107,11 +133,35 @@ const clickItem = (item: any) => {
         justify-items: center;
         align-items: center;
 
+        column-gap: 10px;
+        margin-left: 10px; 
+        margin-right: 10px;
+    }
+
+    .jump {
+        position: relative;
+        width: 100px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         gap: 10px;
-        margin-left: 10px; margin-right: 10px;
+    }
+
+    .input {
+        width: 20px; height: 20px;
+    }
+
+    .go {
+        width: 30px;
+        align-items: center;
+    }
+
+    input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
     }
 
     .hide {
-        visibility: hidden;
+        visibility: hidden
     }
 </style>
