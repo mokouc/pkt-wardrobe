@@ -14,6 +14,7 @@ const collectionStoreRef = storeToRefs(collectionStore)
 
 const items = collectionStoreRef.getItems
 const type = collectionStoreRef.getType
+const gender = collectionStoreRef.getGender
 const collection = collectionStoreRef.getCollection
 
 const clickItem = (item: any) => {
@@ -41,27 +42,34 @@ document.addEventListener('keydown', (event: KeyboardEvent) => {
 
 <template>
     <div class="backpack-container">
-        <div class="tabs top">
-            <div class="button" :class="{'selected': type == 'cset'}" @click="collectionStore.setType('cset')" >套装</div>
-            <div class="button" :class="{'selected': type == 'hair'}" @click="collectionStore.setType('hair')" >头发</div>
-            <div class="button" :class="{'selected': type == 'glas'}" @click="collectionStore.setType('glas')" >眼瞳</div>
+        <div class="bar top">
+            <div class="tab button" :class="{'selected': type == 'cset'}" @click="collectionStore.setType('cset')" >套装</div>
+            <div class="tab button" :class="{'selected': type == 'hair'}" @click="collectionStore.setType('hair')" >发型</div>
+            <div class="tab button" :class="{'selected': type == 'glas'}" @click="collectionStore.setType('glas')" >眼瞳</div>
         </div>
         <div class="items">
             <ItemCell v-for="(i, index) in PAGE_SIZE"
-                :class="{'hide': items[i - 1] == undefined}"
+                :class="{'hide': items[i - 1] == undefined}"    
                 :item="items[index]"
                 @click="clickItem(items[index])" />
         </div>
-        <div class="tabs bottom">
-            <div class="button" @click="collectionStore.setPage(collection.page - 1)"><</div>
-            <div class="button page">
-                <span ref="page" :class="{'hide': isJump}" @click="isJump = !isJump">{{ collection.page }} / {{ collection.total }}</span>
-                <div class="jump" :class="{'hide': !isJump}">
-                    <input ref="input" class="input" type="number" :value="collection.page" @keypress.enter="jump" />
-                    <span class="go" @click="jump">Go</span>
-                </div>
+        <div class="bar bottom">
+            <div class="left">
+                <span class="button gender" @click="collectionStore.toggleGender">{{ gender == 'girl' ? '女' : '男' }}</span>
             </div>
-            <div class="button" @click="collectionStore.setPage(collection.page + 1)">></div>
+            <div class="center">
+                <div class="button" @click="collectionStore.setPage(collection.page - 1)"><</div>
+                <div class="button page">
+                    <span ref="page" :class="{'hide': isJump}" @click="isJump = !isJump">{{ collection.page }} / {{ collection.total }}</span>
+                    <div class="jump" :class="{'hide': !isJump}">
+                        <input ref="input" class="input" type="number" :value="collection.page" @keypress.enter="jump" />
+                        <span class="go" @click="jump">Go</span>
+                    </div>
+                </div>
+                <div class="button" @click="collectionStore.setPage(collection.page + 1)">></div>
+            </div>
+            <div class="right">
+            </div>
         </div>
     </div>
 </template>
@@ -78,20 +86,50 @@ document.addEventListener('keydown', (event: KeyboardEvent) => {
         overflow: hidden;
     }
 
-    .tabs {
+    .bar {
+        position: relative;
         width: 100%; height: 50px;
+        display: grid;
         background-color: rgb(231, 231, 231);
     }
     
-    .tabs.top {
-        display: grid;
+    .bar.top {
         grid-template-columns: repeat(3, 1fr);
     }
 
-    .tabs.bottom {
+    .bar.bottom {   
+        grid-template-columns: 1fr 3fr 1fr;
+    }   
+
+    .tab.selected {
+        background-color: white;
+    }
+
+    .bar > * {
+        position: relative;
+        gap: 10px;
+    }
+
+    .left {
+        width: fit-content;
+        display: flex;
+        margin-left: 15px;
+    }
+
+    .center {
         display: flex;
         justify-content: center;
         background-color: rgb(231, 231, 231);
+    }
+
+    .right {
+        display: flex;
+        margin-right: 15px;
+        margin-left: auto;
+    }
+
+    .center > .button {
+        width: 100px; height: 50px;
     }
 
     .button {
@@ -108,14 +146,6 @@ document.addEventListener('keydown', (event: KeyboardEvent) => {
         cursor: pointer;
 
         user-select: none;
-    }
-
-    .tabs.bottom > .button {
-        width: 100px; height: 50px;
-    }
-
-    .button.selected {
-        background-color: white;
     }
 
     .button.page > * {
@@ -156,12 +186,12 @@ document.addEventListener('keydown', (event: KeyboardEvent) => {
         align-items: center;
     }
 
+    .hide {
+        visibility: hidden
+    }
+
     input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         -webkit-appearance: none;
         margin: 0;
-    }
-
-    .hide {
-        visibility: hidden
     }
 </style>

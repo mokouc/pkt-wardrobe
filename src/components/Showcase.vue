@@ -2,14 +2,12 @@
 import { ref } from 'vue'
 import { useConst } from "@/hooks/useConst"
 import { usePosition } from '@/hooks/usePosition'
-import { useWardrobeStore } from '@/stores/wardrobe'
 import { useImageStore } from '@/stores/image'
 
 const { SHOWCASE_WIDTH, SHOWCASE_HEIGHT } = useConst()
 
 const position = usePosition().position
 const imageStore = useImageStore()
-const { toggleGender } = useWardrobeStore()
 
 const canvas = ref<HTMLCanvasElement>()
 
@@ -31,7 +29,7 @@ useImageStore().setOnload(drawImages)
 <template>
     <div class="showcase-container">
         <canvas ref="canvas" class="canvas" :width="SHOWCASE_WIDTH" :height="SHOWCASE_HEIGHT"></canvas>
-        <div class="toggle" @click="toggleGender"></div>
+        <div class="toggle" @click="imageStore.toggleGender"></div>
     </div>
 </template>
 

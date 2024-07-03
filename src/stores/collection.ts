@@ -5,9 +5,8 @@ import girlCsetList from '@/assets/json/girl/csetList.json'
 import boyGlasList from '@/assets/json/boy/glasList.json'
 import boyHairList from '@/assets/json/boy/hairList.json'
 import boyCsetList from '@/assets/json/boy/csetList.json'
-import { computed, onMounted, ref } from "vue"
+import { computed, ref } from "vue"
 import { useConst } from '@/hooks/useConst'
-import { useWardrobeStore } from '@/stores/wardrobe'
 
 export const useCollectionStore = defineStore('collection', () => {
 
@@ -56,12 +55,15 @@ export const useCollectionStore = defineStore('collection', () => {
     })
     
     const type = ref('cset')
-    const gender = storeToRefs(useWardrobeStore()).getGender
+    const gender = ref('girl')
 
     const getType = computed(() => type.value)
     const setType = (target: string) => type.value = target;
+
+    const getGender = computed(() => gender.value)
+    const toggleGender = () => gender.value = (gender.value == 'girl' ? 'boy' : 'girl')
     
     const setPage = (page: number) => getCollection.value.page = Math.max(Math.min(page, getCollection.value.total), 1)
 
-    return { getCollection, getItems, getType, setType, setPage }
+    return { getCollection, getItems, getType, getGender, setType, setPage, toggleGender }
 })
