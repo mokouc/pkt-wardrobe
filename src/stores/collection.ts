@@ -26,7 +26,7 @@ export const useCollectionStore = defineStore('collection', () => {
                 gender: gender
             })
         }
-        list = list.sort((a, b) => a.name.length > b.name.length || a.name > b.name ? 1 : -1)
+        list = list.sort((a, b) => a.name.length == b.name.length ? (a.name > b.name ? 1 : -1) : a.name.length - b.name.length)
         return { type: type, gender: gender, list: list, page: 1, total: Math.floor(list.length / PAGE_SIZE) + 1}
     }
     
