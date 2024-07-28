@@ -1,10 +1,11 @@
-import { defineStore, storeToRefs } from "pinia"
+import { defineStore } from "pinia"
 import girlGlasList from '@/assets/json/girl/glasList.json'
 import girlHairList from '@/assets/json/girl/hairList.json'
 import girlCsetList from '@/assets/json/girl/csetList.json'
 import boyGlasList from '@/assets/json/boy/glasList.json'
 import boyHairList from '@/assets/json/boy/hairList.json'
 import boyCsetList from '@/assets/json/boy/csetList.json'
+import allCsetList from '@/assets/json/all/csetList.json'
 import { computed, ref } from "vue"
 import { useConst } from '@/hooks/useConst'
 
@@ -33,14 +34,17 @@ export const useCollectionStore = defineStore('collection', () => {
         cset: {
             boy: build(boyCsetList, 'cset', 'boy'),
             girl: build(girlCsetList, 'cset', 'girl'),
+            all: build(allCsetList, 'cset', 'all')
         },
         hair: {
             boy: build(boyHairList, 'hair', 'boy'),
             girl: build(girlHairList, 'hair', 'girl'),
+            all: build({}, 'hair', 'all')
         },
         glas: {
             boy: build(boyGlasList, 'glas', 'boy'),
             girl: build(girlGlasList, 'glas', 'girl'),
+            all: build({}, 'glas', 'all')
         }
     })
     
@@ -50,9 +54,12 @@ export const useCollectionStore = defineStore('collection', () => {
         const items = []
         const offset = (getCollection.value.page - 1) * PAGE_SIZE  
         for (let i = 0; i < PAGE_SIZE; i++)
-            items[i] = getCollection.value.list[i + offset]
+            if (i + offset < getCollection.value.list?.length)
+                items[i] = getCollection.value.list[i + offset]
         return items
     })
+
+    let code = 0;
     
     const type = ref('cset')
     const gender = ref('girl')
@@ -61,7 +68,18 @@ export const useCollectionStore = defineStore('collection', () => {
     const setType = (target: string) => type.value = target;
 
     const getGender = computed(() => gender.value)
-    const toggleGender = () => gender.value = (gender.value == 'girl' ? 'boy' : 'girl')
+    const toggleGender = () => {
+        code = (code + 1) % 3
+        switch(code) {
+            case 0: gender.value = 'girl'
+                break
+            case 1: gender.value = 'boy'
+                break
+            case 2: gender.value = 'all'
+                break
+        }
+        return gender.value
+    }
     
     const setPage = (page: number) => getCollection.value.page = Math.max(Math.min(page, getCollection.value.total), 1)
 

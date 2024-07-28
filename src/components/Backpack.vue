@@ -55,7 +55,7 @@ document.addEventListener('keydown', (event: KeyboardEvent) => {
         </div>
         <div class="bar bottom">
             <div class="left">
-                <span class="button gender" @click="collectionStore.toggleGender">{{ gender == 'girl' ? '女' : '男' }}</span>
+                <span class="button gender" @click="collectionStore.toggleGender">{{ gender == 'girl' ? '女' : (gender == 'boy' ? '男' : 'all') }}</span>
             </div>
             <div class="center">
                 <div class="button" @click="collectionStore.setPage(collection.page - 1)"><</div>
